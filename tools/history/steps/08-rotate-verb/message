@@ -1,0 +1,4 @@
+Add a rotate verb that rotates the server logs
+
+The log name comes from the request and selects a logrotate configuration
+under the log root.

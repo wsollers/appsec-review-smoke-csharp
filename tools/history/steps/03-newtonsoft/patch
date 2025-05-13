@@ -1,0 +1,47 @@
+diff --git a/Smoke.csproj b/Smoke.csproj
+index bec43cf..89d9bea 100644
+--- a/Smoke.csproj
++++ b/Smoke.csproj
+@@ -4,5 +4,9 @@
+     <OutputType>Exe</OutputType>
+     <Nullable>disable</Nullable>
+     <ImplicitUsings>disable</ImplicitUsings>
++    <RestorePackagesWithLockFile>true</RestorePackagesWithLockFile>
+   </PropertyGroup>
++  <ItemGroup>
++    <PackageReference Include="Newtonsoft.Json" Version="12.0.1" />
++  </ItemGroup>
+ </Project>
+diff --git a/nuget.config b/nuget.config
+new file mode 100644
+index 0000000..e71d6cd
+--- /dev/null
++++ b/nuget.config
+@@ -0,0 +1,8 @@
++<?xml version="1.0" encoding="utf-8"?>
++<configuration>
++  <!-- Restore resolves only against the vendored packages under nuget/; no network. -->
++  <packageSources>
++    <clear />
++    <add key="vendored" value="nuget" />
++  </packageSources>
++</configuration>
+diff --git a/packages.lock.json b/packages.lock.json
+new file mode 100644
+index 0000000..3362747
+--- /dev/null
++++ b/packages.lock.json
+@@ -0,0 +1,13 @@
++{
++  "version": 1,
++  "dependencies": {
++    "net8.0": {
++      "Newtonsoft.Json": {
++        "type": "Direct",
++        "requested": "[12.0.1, )",
++        "resolved": "12.0.1",
++        "contentHash": "pBR3wCgYWZGiaZDYP+HHYnalVnPJlpP1q55qvVb+adrDHmFMDc1NAKio61xTwftK3Pw5h7TZJPJEEVMd6ty8rg=="
++      }
++    }
++  }
++}

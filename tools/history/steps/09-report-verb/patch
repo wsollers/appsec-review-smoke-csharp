@@ -1,0 +1,37 @@
+diff --git a/src/MaintenanceController.cs b/src/MaintenanceController.cs
+index 80227c2..ab92dff 100644
+--- a/src/MaintenanceController.cs
++++ b/src/MaintenanceController.cs
+@@ -11,6 +11,7 @@ namespace Smoke
+     public class MaintenanceController : ControllerBase
+     {
+         private const string LogRoot = "/var/log/smoke";
++        private const string ReportRoot = "/var/lib/smoke/reports";
+ 
+         // Rotates the server log named by the request through logrotate.
+         private static bool RotateLogs(string name)
+@@ -20,6 +21,13 @@ namespace Smoke
+             return process.ExitCode == 0;
+         }
+ 
++        // Returns the stored report named by the request, or an empty string.
++        private static string ReadReport(string name)
++        {
++            string path = Path.Combine(ReportRoot, name);
++            return System.IO.File.Exists(path) ? System.IO.File.ReadAllText(path) : "";
++        }
++
+         // Dispatches one maintenance verb and returns an HTTP status.
+         [HttpPost("ops")]
+         public IActionResult Dispatch(string verb, string arg)
+@@ -37,6 +45,10 @@ namespace Smoke
+             {
+                 status = RotateLogs(arg) ? 200 : 500;
+             }
++            else if (verb == "report" && arg != null)
++            {
++                status = ReadReport(arg).Length > 0 ? 200 : 404;
++            }
+             return status == 200 ? Ok() : StatusCode(status);
+         }
+     }

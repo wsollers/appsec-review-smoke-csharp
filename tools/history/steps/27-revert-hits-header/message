@@ -1,0 +1,4 @@
+Revert "Append an X-Hits header with the hook counter to every ops reply"
+
+The header breaks the operator client's response parser; revert until it can
+read it.

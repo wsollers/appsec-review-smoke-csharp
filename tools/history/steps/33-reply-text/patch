@@ -1,0 +1,39 @@
+diff --git a/src/MaintenanceController.cs b/src/MaintenanceController.cs
+index 60247e0..f5f256a 100644
+--- a/src/MaintenanceController.cs
++++ b/src/MaintenanceController.cs
+@@ -40,6 +40,7 @@ namespace Smoke
+         public IActionResult Dispatch(string verb, string arg, int level)
+         {
+             int status = 400;
++            string reply = "";
+             if (verb == null || verb.Length == 0)
+             {
+                 return BadRequest();
+@@ -51,6 +52,7 @@ namespace Smoke
+             }
+             if (verb == "ping")
+             {
++                reply = "pong";
+                 status = 200;
+             }
+             else if (verb == "rotate")
+@@ -59,7 +61,8 @@ namespace Smoke
+             }
+             else if (verb == "report" && arg != null)
+             {
+-                status = ReadReport(arg).Length > 0 ? 200 : 404;
++                reply = ReadReport(arg);
++                status = reply.Length > 0 ? 200 : 404;
+             }
+             else if (verb == "warm")
+             {
+@@ -88,7 +91,7 @@ namespace Smoke
+                 }
+             }
+             Response.Headers["X-Hits"] = hits.ToString();
+-            return status == 200 ? Ok() : StatusCode(status);
++            return status == 200 ? Ok(reply) : StatusCode(status);
+         }
+     }
+ }

@@ -1,0 +1,3 @@
+Add a maintenance controller with a ping verb
+
+POST /maintenance/ops takes a verb and an argument; Dispatch switches on the verb.

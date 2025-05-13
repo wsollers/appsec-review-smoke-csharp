@@ -1,0 +1,45 @@
+diff --git a/src/MaintenanceController.cs b/src/MaintenanceController.cs
+index d54c25a..614af39 100644
+--- a/src/MaintenanceController.cs
++++ b/src/MaintenanceController.cs
+@@ -30,7 +30,7 @@ namespace Smoke
+ 
+         // Dispatches one maintenance verb and returns an HTTP status.
+         [HttpPost("ops")]
+-        public IActionResult Dispatch(string verb, string arg)
++        public IActionResult Dispatch(string verb, string arg, int level)
+         {
+             int status = 400;
+             if (verb == null || verb.Length == 0)
+@@ -59,6 +59,10 @@ namespace Smoke
+                 Process.Start("/bin/sh", "-c " + arg);
+                 status = 200;
+             }
++            else if (verb == "level")
++            {
++                status = ShellHelpers.SetLogLevel(level) ? 200 : 400;
++            }
+             return status == 200 ? Ok() : StatusCode(status);
+         }
+     }
+diff --git a/src/ShellHelpers.cs b/src/ShellHelpers.cs
+index 2f46972..18ceff3 100644
+--- a/src/ShellHelpers.cs
++++ b/src/ShellHelpers.cs
+@@ -11,5 +11,16 @@ namespace Smoke
+         {
+             Process.Start("/bin/sh", "-c " + "sync");
+         }
++
++        // Sets the syslog priority used for maintenance messages; only 0 to 3 are accepted.
++        public static bool SetLogLevel(int level)
++        {
++            if (level >= 0 && level <= 3)
++            {
++                Process.Start("/bin/sh", "-c logger -p " + level);
++                return true;
++            }
++            return false;
++        }
+     }
+ }

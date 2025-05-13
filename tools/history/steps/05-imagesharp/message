@@ -1,0 +1,4 @@
+Add SixLabors.ImageSharp.Drawing 1.0.0 for report charts
+
+Vendors the package and its transitive closure (ImageSharp, Fonts, CodePages,
+Unsafe, Platforms) into the feed.

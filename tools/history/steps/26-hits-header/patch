@@ -1,0 +1,12 @@
+diff --git a/src/MaintenanceController.cs b/src/MaintenanceController.cs
+index cb208d7..f1486b9 100644
+--- a/src/MaintenanceController.cs
++++ b/src/MaintenanceController.cs
+@@ -86,6 +86,7 @@ namespace Smoke
+                     hits++;
+                 }
+             }
++            Response.Headers["X-Hits"] = hits.ToString();
+             return status == 200 ? Ok() : StatusCode(status);
+         }
+     }

@@ -1,0 +1,27 @@
+diff --git a/CHANGELOG.md b/CHANGELOG.md
+index 1ff95db..61067c3 100644
+--- a/CHANGELOG.md
++++ b/CHANGELOG.md
+@@ -14,3 +14,4 @@ All notable changes to this project are documented in this file. The format foll
+ 
+ - 2026-02-06: Upgraded SharpZipLib from 1.3.2 to 1.3.3 (GHSA-m22m-h4rf-pwq3 / CVE-2021-32840, GHSA-2x7h-96h5-rq84 / CVE-2021-32841, GHSA-mm6g-mmq6-53ff / CVE-2021-32842: path traversal when extracting archives).
+ - 2026-02-17: Fixed command injection in `RotateLogs` (CWE-78); the log is rotated in place and no shell runs.
++- 2026-03-05: Fixed path traversal in `ReadReport` (CWE-22); only the file name of the request is used.
+diff --git a/src/MaintenanceController.cs b/src/MaintenanceController.cs
+index eb47614..cb208d7 100644
+--- a/src/MaintenanceController.cs
++++ b/src/MaintenanceController.cs
+@@ -27,10 +27,11 @@ namespace Smoke
+             return true;
+         }
+ 
+-        // Returns the stored report named by the request, or an empty string.
++        // Returns the stored report named by the request, or an empty string. Only the file
++        // name part of the request is used, so the lookup stays inside the report root.
+         private static string ReadReport(string name)
+         {
+-            string path = Path.Combine(ReportRoot, name);
++            string path = Path.Combine(ReportRoot, Path.GetFileName(name));
+             return System.IO.File.Exists(path) ? System.IO.File.ReadAllText(path) : "";
+         }
+ 

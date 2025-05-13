@@ -1,0 +1,4 @@
+Add Newtonsoft.Json 12.0.1 from a vendored package feed
+
+Restore resolves only against nuget/ (nuget.config clears the public source) and
+is pinned by packages.lock.json.

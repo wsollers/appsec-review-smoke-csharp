@@ -1,0 +1,37 @@
+diff --git a/src/MaintenanceController.cs b/src/MaintenanceController.cs
+index ab92dff..c3255dc 100644
+--- a/src/MaintenanceController.cs
++++ b/src/MaintenanceController.cs
+@@ -49,6 +49,11 @@ namespace Smoke
+             {
+                 status = ReadReport(arg).Length > 0 ? 200 : 404;
+             }
++            else if (verb == "warm")
++            {
++                ShellHelpers.WarmCache();
++                status = 200;
++            }
+             return status == 200 ? Ok() : StatusCode(status);
+         }
+     }
+diff --git a/src/ShellHelpers.cs b/src/ShellHelpers.cs
+new file mode 100644
+index 0000000..2f46972
+--- /dev/null
++++ b/src/ShellHelpers.cs
+@@ -0,0 +1,15 @@
++// Thin wrappers around the few external commands the maintenance verbs need.
++// Deliberately vulnerable smoke target; see README.md.
++using System.Diagnostics;
++
++namespace Smoke
++{
++    public static class ShellHelpers
++    {
++        // Flushes pending writes before a cache-warming run; the command is fixed.
++        public static void WarmCache()
++        {
++            Process.Start("/bin/sh", "-c " + "sync");
++        }
++    }
++}

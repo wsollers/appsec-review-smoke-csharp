@@ -1,0 +1,12 @@
+diff --git a/src/MaintenanceController.cs b/src/MaintenanceController.cs
+index f1486b9..60247e0 100644
+--- a/src/MaintenanceController.cs
++++ b/src/MaintenanceController.cs
+@@ -44,6 +44,7 @@ namespace Smoke
+             {
+                 return BadRequest();
+             }
++            verb = verb.Trim().ToLowerInvariant();
+             if (arg != null && arg.Length > 256)
+             {
+                 arg = arg.Substring(0, 256);

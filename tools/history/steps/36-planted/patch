@@ -1,0 +1,91 @@
+diff --git a/PLANTED.md b/PLANTED.md
+new file mode 100644
+index 0000000..608de8f
+--- /dev/null
++++ b/PLANTED.md
+@@ -0,0 +1,85 @@
++# Planted inventory
++
++This repository is a smoke target for appsec-review. Everything below is deliberate. The
++evaluation answer key lives in the separate `appsec-review-smoke-guide` repository; this file
++describes the target, it is not the key.
++
++Line numbers refer to the tagged head. The fixture file `src/Program.cs` is byte-identical to
++`tests/fixtures/graph/codeql_export/csharp-synthetic/source/Program.cs` in appsec-review, so the
++line numbers its `expected-facts.json` cites are unchanged.
++
++## True positives, code
++
++| Id | Weakness | Where | Source to sink |
++| --- | --- | --- | --- |
++| TP-C1 | CWE-89 SQL injection | `src/Program.cs` `ItemsController.Query` | action parameter `name` to `DbCommand.CommandText` (line 65) through `Helpers.Wrap` |
++| TP-C2 | CWE-78 command injection | `src/Program.cs` `ItemsController.Run` | action parameter `tool` to `Process.Start` (lines 74 and 76) |
++| TP-C3 | CWE-918 server-side request forgery | `src/Program.cs` `ItemsController.Fetch` | action parameter `url` to `HttpClient.GetStringAsync` (line 83) |
++| TP-C4 | CWE-22 path traversal | `src/Program.cs` `ItemsController.Read` to `FileStore.Load` | action parameter `name` through the virtual call `store.Load` (line 90) to `File.Delete` (line 20) |
++| TP-C5 | CWE-502 unsafe deserialization | `src/Program.cs` `ItemsController.Import` | action parameter `body` to `XmlSerializer.Deserialize` (line 98) |
++| TP-C6 | CWE-470 unsafe reflection | `src/Program.cs` `ItemsController.Import` | action parameter `typeName` to `Type.GetType` and `Activator.CreateInstance` (line 97) |
++| TP-C7 | CWE-78 command injection | `src/MaintenanceController.cs` `Dispatch`, `exec` verb | action parameter `arg` to `Process.Start("/bin/sh", "-c " + arg)` |
++| TP-C8 | CWE-601 open redirect | `src/Navigation.cs` `NavigationController.Follow` | action parameter `target` to `Redirect` |
++| TP-C9 | CWE-611 XML external entity processing | `src/Feeds.cs` `FeedsController.ImportFeed` | action parameter `body` to `XmlReader.Create` with `DtdProcessing.Parse` and an `XmlUrlResolver` |
++
++## True positives, dependencies
++
++Declared in `Smoke.csproj` and recorded in `packages.lock.json` (`RestorePackagesWithLockFile`);
++the `.nupkg` files are vendored under `nuget/`, the only package source `nuget.config` allows. None
++is referenced by the code.
++
++| Id | Package | Version | Advisory | Fixed in | How declared |
++| --- | --- | --- | --- | --- | --- |
++| TP-D1 | Newtonsoft.Json | 12.0.1 | GHSA-5crp-9r3c-p9vr (CVE-2024-21907) | 13.0.1 | direct |
++| TP-D2 | RestSharp | 106.11.7 | GHSA-9pq7-rcxv-47vq (CVE-2021-27293) | 106.11.8 | direct |
++| TP-D3 | SixLabors.ImageSharp | 2.1.5 | GHSA-65x7-c272-7g7r (CVE-2024-27929) and later advisories | 2.1.7 | transitive, through SixLabors.ImageSharp.Drawing 1.0.0 (`"type": "Transitive"` in the lock file) |
++
++## Fixed in history
++
++| Id | What | Introduced | Fixed |
++| --- | --- | --- | --- |
++| FX-C1 | CWE-78 command injection in `RotateLogs` (`/bin/sh -c` with the request's log name) | "Add a rotate verb that rotates the server logs" | "Fix command injection in RotateLogs (CWE-78)": the sink was removed |
++| FX-C2 | CWE-22 path traversal in `ReadReport` | "Add a report verb that returns a stored report" | "Fix path traversal in ReadReport (CWE-22)": `Path.GetFileName` now sanitizes the name before `Path.Combine` and `File.ReadAllText` |
++| FX-D1 | SharpZipLib 1.3.2 (CVE-2021-32840, CVE-2021-32841, CVE-2021-32842) | "Add SharpZipLib 1.3.2 for archive handling" | "Upgrade SharpZipLib from 1.3.2 to 1.3.3" |
++
++`SECURITY.md` and `CHANGELOG.md` describe the three fixed items and nothing else.
++
++## False positives
++
++Each is flagged by `appsec-review.review-signal.sink.csharp-process-shell` under appsec-review
++`rules/semgrep/review-signals.yml` (the only mounted rule that reports C# constructs) and refuted
++by a code-intelligence fact. Each lives in its own function in `src/ShellHelpers.cs`.
++
++| Id | Where | Flagged by | Refuted by |
++| --- | --- | --- | --- |
++| FP-1 | `WarmCache`: `Process.Start("/bin/sh", "-c " + "sync")` | `appsec-review.review-signal.sink.csharp-process-shell` | constant operand: no `dataflow_path` reaches the sink |
++| FP-2 | `SetLogLevel`: `Process.Start("/bin/sh", "-c logger -p " + level)` | `appsec-review.review-signal.sink.csharp-process-shell` | `guard_fact`: `level >= 0 && level <= 3` dominates the sink and constrains its operand (`range_fact` 0..3) |
++| FP-3 | `StatUpload`: `Process.Start("/usr/bin/stat", "--format=%s -- " + Path.Combine(UploadRoot, safe))` | `appsec-review.review-signal.sink.csharp-process-shell` | `path_sanitizers`: `Path.GetFileName` dominates the only operand; no shell runs and `--` ends option parsing |
++| FP-4 | `LegacyShell`: `Process.Start("/bin/sh", "-c " + arg)` | `appsec-review.review-signal.sink.csharp-process-shell` | dead code: no callers, no entry point, so no `dataflow_path` reaches it |
++
++## High-complexity function
++
++`Dispatch` in `src/MaintenanceController.cs` is the verb switch of the maintenance controller and
++the function the history touches most. It holds TP-C7. Its intended cyclomatic complexity is above
++15 by the appsec-review counter (branches, loops, boolean operators and conditional expressions);
++the measured value is recorded in the guide.
++
++## Code-intelligence cases
++
++`src/Program.cs` carries the appsec-review C# graph-export fixture unchanged: interface dispatch
++(`store.Load` resolving to `FileStore.Load` and `MemoryStore.Load`), delegate dispatch
++(`Helpers.Apply`), an unresolved `dynamic` call (`sink.Flush`), a sanitized path
++(`Path.GetFileName` before `File.Delete` in `Read`), a dominating and a non-dominating guard
++(`tool.Length < 16` in `Run`), a bounded allocation (`new byte[count]`) and an unguarded narrowing
++conversion (`(int)length`), command-line and environment sources in `Main`, and the cross-function
++flow summaries of `FileStore.Load` and `Helpers.Wrap`. The fixed state of `ReadReport` adds a
++second `Path.GetFileName` sanitizer and `SetLogLevel` a dominating range guard.
++
++## History
++
++Produced by `tools/make-history.sh` from `tools/history/steps/`: 36 commits by three synthetic
++authors, dated 2025-05 to 2026-09, including the introduction and fix of each fixed item, a
++dependency upgrade, a rename (`src/Redirects.cs` to `src/Navigation.cs`), a revert and its reapply,
++a hardening review that adds `SECURITY.md`, and a commit body that records an investigated report
++found not exploitable (FP-2). Package vendoring commits add `.nupkg` files; every other commit
++touches at most three.

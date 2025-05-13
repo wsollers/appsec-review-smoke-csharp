@@ -1,0 +1,7 @@
+Fix command injection in RotateLogs (CWE-78)
+
+The rotate verb passed the log name from the request into a /bin/sh -c command
+string, so a name containing shell metacharacters ran arbitrary commands as
+the service user. RotateLogs now rotates the one server log in place with
+File.Move and takes no argument: there is no command string and no shell, so
+no request input reaches a command interpreter.

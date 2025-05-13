@@ -1,0 +1,4 @@
+diff --git a/src/Redirects.cs b/src/Navigation.cs
+similarity index 100%
+rename from src/Redirects.cs
+rename to src/Navigation.cs

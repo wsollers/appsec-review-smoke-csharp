@@ -1,0 +1,64 @@
+diff --git a/Smoke.csproj b/Smoke.csproj
+index a23a8c4..323acbe 100644
+--- a/Smoke.csproj
++++ b/Smoke.csproj
+@@ -9,5 +9,6 @@
+   <ItemGroup>
+     <PackageReference Include="Newtonsoft.Json" Version="12.0.1" />
+     <PackageReference Include="RestSharp" Version="106.11.7" />
++    <PackageReference Include="SixLabors.ImageSharp.Drawing" Version="1.0.0" />
+   </ItemGroup>
+ </Project>
+diff --git a/packages.lock.json b/packages.lock.json
+index 9ae8130..0328943 100644
+--- a/packages.lock.json
++++ b/packages.lock.json
+@@ -13,6 +13,48 @@
+         "requested": "[106.11.7, )",
+         "resolved": "106.11.7",
+         "contentHash": "NzndH096CTulvq+ihr7u1mBJ29oukdi9A8bypQJk+kaHxbRzTTrtgsEEQAb04ptTUZmQa7cgo7uF5z7NuEPX1Q=="
++      },
++      "SixLabors.ImageSharp.Drawing": {
++        "type": "Direct",
++        "requested": "[1.0.0, )",
++        "resolved": "1.0.0",
++        "contentHash": "02z/+BESLiV/dn8NV+9+DkK9X6R2UmcwR8AVytupvwKa0EPVqYyx8zh+PpksqSjpibDVnVMXlq3OaMCDeDrEug==",
++        "dependencies": {
++          "SixLabors.Fonts": "1.0.0",
++          "SixLabors.ImageSharp": "2.1.5"
++        }
++      },
++      "Microsoft.NETCore.Platforms": {
++        "type": "Transitive",
++        "resolved": "5.0.0",
++        "contentHash": "VyPlqzH2wavqquTcYpkIIAQ6WdenuKoFN0BdYBbCWsclXacSOHNQn66Gt4z5NBqEYW0FAPm5rlvki9ZiCij5xQ=="
++      },
++      "SixLabors.Fonts": {
++        "type": "Transitive",
++        "resolved": "1.0.0",
++        "contentHash": "LFQsCZlV0xlUyXAOMUo5kkSl+8zAQXXbbdwWchtk0B4o7zotZhQsQOcJUELGHdfPfm/xDAsz6hONAuV25bJaAg=="
++      },
++      "SixLabors.ImageSharp": {
++        "type": "Transitive",
++        "resolved": "2.1.5",
++        "contentHash": "J4+ZcHWfKH2GByOwbjb6RRoV8SfnnNISQJZoBQWRtatmvii4dZQbSpfuFZjt2hA4bqDKCZ6Ibye0AvcqBzNPaA==",
++        "dependencies": {
++          "System.Runtime.CompilerServices.Unsafe": "5.0.0",
++          "System.Text.Encoding.CodePages": "5.0.0"
++        }
++      },
++      "System.Runtime.CompilerServices.Unsafe": {
++        "type": "Transitive",
++        "resolved": "5.0.0",
++        "contentHash": "ZD9TMpsmYJLrxbbmdvhwt9YEgG5WntEnZ/d1eH8JBX9LBp+Ju8BSBhUGbZMNVHHomWo2KVImJhTDl2hIgw/6MA=="
++      },
++      "System.Text.Encoding.CodePages": {
++        "type": "Transitive",
++        "resolved": "5.0.0",
++        "contentHash": "NyscU59xX6Uo91qvhOs2Ccho3AR2TnZPomo1Z0K6YpyztBPM/A5VbkzOO19sy3A3i1TtEnTxA7bCe3Us+r5MWg==",
++        "dependencies": {
++          "Microsoft.NETCore.Platforms": "5.0.0"
++        }
+       }
+     }
+   }

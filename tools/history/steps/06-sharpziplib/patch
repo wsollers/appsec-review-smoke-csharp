@@ -1,0 +1,28 @@
+diff --git a/Smoke.csproj b/Smoke.csproj
+index 323acbe..6a8ae1a 100644
+--- a/Smoke.csproj
++++ b/Smoke.csproj
+@@ -10,5 +10,6 @@
+     <PackageReference Include="Newtonsoft.Json" Version="12.0.1" />
+     <PackageReference Include="RestSharp" Version="106.11.7" />
+     <PackageReference Include="SixLabors.ImageSharp.Drawing" Version="1.0.0" />
++    <PackageReference Include="SharpZipLib" Version="1.3.2" />
+   </ItemGroup>
+ </Project>
+diff --git a/packages.lock.json b/packages.lock.json
+index 0328943..e7825a5 100644
+--- a/packages.lock.json
++++ b/packages.lock.json
+@@ -14,6 +14,12 @@
+         "resolved": "106.11.7",
+         "contentHash": "NzndH096CTulvq+ihr7u1mBJ29oukdi9A8bypQJk+kaHxbRzTTrtgsEEQAb04ptTUZmQa7cgo7uF5z7NuEPX1Q=="
+       },
++      "SharpZipLib": {
++        "type": "Direct",
++        "requested": "[1.3.2, )",
++        "resolved": "1.3.2",
++        "contentHash": "WSdeDReL8eugMCw5BH/tFAZpgR+YsYMwm6kIvqg3J8LbfRjbbebmEzn63AbEveqyMOljBO68g6tCCv165wMkSg=="
++      },
+       "SixLabors.ImageSharp.Drawing": {
+         "type": "Direct",
+         "requested": "[1.0.0, )",

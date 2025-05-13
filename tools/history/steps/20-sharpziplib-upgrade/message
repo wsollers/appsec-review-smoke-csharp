@@ -1,0 +1,7 @@
+Upgrade SharpZipLib from 1.3.2 to 1.3.3
+
+SharpZipLib 1.3.2 can write outside the destination directory when extracting
+crafted zip and tar archives (GHSA-m22m-h4rf-pwq3 / CVE-2021-32840,
+GHSA-2x7h-96h5-rq84 / CVE-2021-32841, GHSA-mm6g-mmq6-53ff / CVE-2021-32842).
+1.3.3 rejects those entry names. The vendored package is replaced, the pin and
+the lock file move to 1.3.3, and the 1.3.2 package leaves the feed.

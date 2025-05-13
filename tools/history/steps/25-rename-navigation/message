@@ -1,0 +1,3 @@
+Rename Redirects.cs to Navigation.cs
+
+The file holds the navigation controller; the route keeps its name.

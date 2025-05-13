@@ -1,0 +1,7 @@
+Fix path traversal in ReadReport (CWE-22)
+
+The report verb joined the requested name onto the report root and read the
+result, so "../" sequences read files outside the report directory.
+ReadReport now reduces the request to its file name with Path.GetFileName
+before Path.Combine; the sanitized name has no directory part, so every path
+to File.ReadAllText stays under the report root.

@@ -1,0 +1,16 @@
+diff --git a/src/ShellHelpers.cs b/src/ShellHelpers.cs
+index 4f0e862..0465767 100644
+--- a/src/ShellHelpers.cs
++++ b/src/ShellHelpers.cs
+@@ -33,5 +33,11 @@ namespace Smoke
+             string safe = Path.GetFileName(name);
+             Process.Start("/usr/bin/stat", "--format=%s -- " + Path.Combine(UploadRoot, safe));
+         }
++
++        // Shell helper from before the controller existed; nothing calls it.
++        private static void LegacyShell(string arg)
++        {
++            Process.Start("/bin/sh", "-c " + arg);
++        }
+     }
+ }

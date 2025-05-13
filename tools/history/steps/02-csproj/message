@@ -1,0 +1,4 @@
+Add the .NET project and the synthetic fixture program
+
+One Web SDK project targeting net8.0; src/Program.cs holds the items controller
+and the entry point.
