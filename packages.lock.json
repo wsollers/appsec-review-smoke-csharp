@@ -14,6 +14,12 @@
         "resolved": "106.11.7",
         "contentHash": "NzndH096CTulvq+ihr7u1mBJ29oukdi9A8bypQJk+kaHxbRzTTrtgsEEQAb04ptTUZmQa7cgo7uF5z7NuEPX1Q=="
       },
+      "SharpZipLib": {
+        "type": "Direct",
+        "requested": "[1.3.2, )",
+        "resolved": "1.3.2",
+        "contentHash": "WSdeDReL8eugMCw5BH/tFAZpgR+YsYMwm6kIvqg3J8LbfRjbbebmEzn63AbEveqyMOljBO68g6tCCv165wMkSg=="
+      },
       "SixLabors.ImageSharp.Drawing": {
         "type": "Direct",
         "requested": "[1.0.0, )",
