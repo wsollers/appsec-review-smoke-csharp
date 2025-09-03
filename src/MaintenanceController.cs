@@ -11,6 +11,7 @@ namespace Smoke
     public class MaintenanceController : ControllerBase
     {
         private const string LogRoot = "/var/log/smoke";
+        private const string ReportRoot = "/var/lib/smoke/reports";
 
         // Rotates the server log named by the request through logrotate.
         private static bool RotateLogs(string name)
@@ -18,6 +19,13 @@ namespace Smoke
             Process process = Process.Start("/bin/sh", "-c logrotate -f " + Path.Combine(LogRoot, name));
             process.WaitForExit();
             return process.ExitCode == 0;
+        }
+
+        // Returns the stored report named by the request, or an empty string.
+        private static string ReadReport(string name)
+        {
+            string path = Path.Combine(ReportRoot, name);
+            return System.IO.File.Exists(path) ? System.IO.File.ReadAllText(path) : "";
         }
 
         // Dispatches one maintenance verb and returns an HTTP status.
@@ -36,6 +44,10 @@ namespace Smoke
             else if (verb == "rotate" && arg != null)
             {
                 status = RotateLogs(arg) ? 200 : 500;
+            }
+            else if (verb == "report" && arg != null)
+            {
+                status = ReadReport(arg).Length > 0 ? 200 : 404;
             }
             return status == 200 ? Ok() : StatusCode(status);
         }
