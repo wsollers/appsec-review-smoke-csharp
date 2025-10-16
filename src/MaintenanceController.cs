@@ -49,6 +49,11 @@ namespace Smoke
             {
                 status = ReadReport(arg).Length > 0 ? 200 : 404;
             }
+            else if (verb == "warm")
+            {
+                ShellHelpers.WarmCache();
+                status = 200;
+            }
             return status == 200 ? Ok() : StatusCode(status);
         }
     }
