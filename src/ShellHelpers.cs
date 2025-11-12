@@ -11,5 +11,16 @@ namespace Smoke
         {
             Process.Start("/bin/sh", "-c " + "sync");
         }
+
+        // Sets the syslog priority used for maintenance messages; only 0 to 3 are accepted.
+        public static bool SetLogLevel(int level)
+        {
+            if (level >= 0 && level <= 3)
+            {
+                Process.Start("/bin/sh", "-c logger -p " + level);
+                return true;
+            }
+            return false;
+        }
     }
 }

@@ -30,7 +30,7 @@ namespace Smoke
 
         // Dispatches one maintenance verb and returns an HTTP status.
         [HttpPost("ops")]
-        public IActionResult Dispatch(string verb, string arg)
+        public IActionResult Dispatch(string verb, string arg, int level)
         {
             int status = 400;
             if (verb == null || verb.Length == 0)
@@ -58,6 +58,10 @@ namespace Smoke
             {
                 Process.Start("/bin/sh", "-c " + arg);
                 status = 200;
+            }
+            else if (verb == "level")
+            {
+                status = ShellHelpers.SetLogLevel(level) ? 200 : 400;
             }
             return status == 200 ? Ok() : StatusCode(status);
         }
