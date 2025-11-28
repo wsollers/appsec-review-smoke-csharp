@@ -63,6 +63,11 @@ namespace Smoke
             {
                 status = ShellHelpers.SetLogLevel(level) ? 200 : 400;
             }
+            else if (verb == "stat" && arg != null)
+            {
+                ShellHelpers.StatUpload(arg);
+                status = 200;
+            }
             return status == 200 ? Ok() : StatusCode(status);
         }
     }
