@@ -39,6 +39,10 @@ namespace Smoke
             {
                 return BadRequest();
             }
+            if (arg != null && arg.Length > 256)
+            {
+                arg = arg.Substring(0, 256);
+            }
             if (verb == "ping")
             {
                 status = 200;
