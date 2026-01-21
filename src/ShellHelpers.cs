@@ -33,5 +33,11 @@ namespace Smoke
             string safe = Path.GetFileName(name);
             Process.Start("/usr/bin/stat", "--format=%s -- " + Path.Combine(UploadRoot, safe));
         }
+
+        // Shell helper from before the controller existed; nothing calls it.
+        private static void LegacyShell(string arg)
+        {
+            Process.Start("/bin/sh", "-c " + arg);
+        }
     }
 }
