@@ -9,3 +9,7 @@ All notable changes to this project are documented in this file. The format foll
 
 - Maintenance controller with ping, rotate and report verbs.
 - Vendored NuGet feed under `nuget/` with Newtonsoft.Json, RestSharp, SixLabors.ImageSharp.Drawing and SharpZipLib.
+
+### Security
+
+- 2026-02-06: Upgraded SharpZipLib from 1.3.2 to 1.3.3 (GHSA-m22m-h4rf-pwq3 / CVE-2021-32840, GHSA-2x7h-96h5-rq84 / CVE-2021-32841, GHSA-mm6g-mmq6-53ff / CVE-2021-32842: path traversal when extracting archives).
