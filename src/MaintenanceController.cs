@@ -15,12 +15,16 @@ namespace Smoke
         private static readonly string[] Hooks = { "ping", "rotate", "report" };
         private static int hits;
 
-        // Rotates the server log named by the request through logrotate.
-        private static bool RotateLogs(string name)
+        // Rotates the server log in place; the log name is fixed and no shell is involved.
+        private static bool RotateLogs()
         {
-            Process process = Process.Start("/bin/sh", "-c logrotate -f " + Path.Combine(LogRoot, name));
-            process.WaitForExit();
-            return process.ExitCode == 0;
+            string current = Path.Combine(LogRoot, "smoke.log");
+            if (!System.IO.File.Exists(current))
+            {
+                return false;
+            }
+            System.IO.File.Move(current, current + ".1", true);
+            return true;
         }
 
         // Returns the stored report named by the request, or an empty string.
@@ -47,9 +51,9 @@ namespace Smoke
             {
                 status = 200;
             }
-            else if (verb == "rotate" && arg != null)
+            else if (verb == "rotate")
             {
-                status = RotateLogs(arg) ? 200 : 500;
+                status = RotateLogs() ? 200 : 500;
             }
             else if (verb == "report" && arg != null)
             {
