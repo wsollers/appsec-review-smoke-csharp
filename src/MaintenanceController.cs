@@ -27,10 +27,11 @@ namespace Smoke
             return true;
         }
 
-        // Returns the stored report named by the request, or an empty string.
+        // Returns the stored report named by the request, or an empty string. Only the file
+        // name part of the request is used, so the lookup stays inside the report root.
         private static string ReadReport(string name)
         {
-            string path = Path.Combine(ReportRoot, name);
+            string path = Path.Combine(ReportRoot, Path.GetFileName(name));
             return System.IO.File.Exists(path) ? System.IO.File.ReadAllText(path) : "";
         }
 
