@@ -16,6 +16,8 @@ namespace Smoke
         }
 
         // Sets the syslog priority used for maintenance messages; only 0 to 3 are accepted.
+        // The level is bounded by the check on the only path to the command, so the argument
+        // is one digit (reviewed 2026-03; see the commit log).
         public static bool SetLogLevel(int level)
         {
             if (level >= 0 && level <= 3)
