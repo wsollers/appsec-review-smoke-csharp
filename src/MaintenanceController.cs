@@ -86,6 +86,7 @@ namespace Smoke
                     hits++;
                 }
             }
+            Response.Headers["X-Hits"] = hits.ToString();
             return status == 200 ? Ok() : StatusCode(status);
         }
     }
