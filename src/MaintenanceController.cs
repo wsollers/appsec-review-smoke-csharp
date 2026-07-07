@@ -44,6 +44,7 @@ namespace Smoke
             {
                 return BadRequest();
             }
+            verb = verb.Trim().ToLowerInvariant();
             if (arg != null && arg.Length > 256)
             {
                 arg = arg.Substring(0, 256);
