@@ -14,6 +14,7 @@ namespace Smoke
         private const string ReportRoot = "/var/lib/smoke/reports";
         private static readonly string[] Hooks = { "ping", "rotate", "report" };
         private static int hits;
+        private static int acknowledged;
 
         // Rotates the server log in place; the log name is fixed and no shell is involved.
         private static bool RotateLogs()
@@ -81,6 +82,12 @@ namespace Smoke
             else if (verb == "stat" && arg != null)
             {
                 ShellHelpers.StatUpload(arg);
+                status = 200;
+            }
+            else if (verb == "ack" && arg != null && int.TryParse(arg, out int alert) && alert > 0)
+            {
+                acknowledged = alert;
+                reply = "ack " + acknowledged;
                 status = 200;
             }
             for (int i = 0; i < Hooks.Length; i++)
